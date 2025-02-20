@@ -76,3 +76,34 @@ INSERT INTO order_details (order_id, product_id, quantity) VALUES
 (currval('orders_order_id_seq'), 1, 2),
 (currval('orders_order_id_seq'), 2, 1);
 COMMIT;
+
+
+-- View untuk laporan penjualan per produk
+CREATE VIEW sales_report_by_product AS
+SELECT
+    p.product_name,
+    SUM(od.quantity) AS total_quantity_sold,
+    SUM(od.subtotal) AS total_revenue
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id
+GROUP BY p.product_name;
+
+-- View untuk laporan penjualan per pelanggan
+CREATE VIEW sales_report_by_customer AS
+SELECT
+    c.name AS customer_name,
+    COUNT(o.order_id) AS total_orders,
+    SUM(o.total_price) AS total_spent
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.name;
+
+-- View untuk laporan penjualan per bulan
+CREATE VIEW sales_report_by_month AS
+SELECT
+    DATE_TRUNC('month', o.order_date) AS month,
+    SUM(od.quantity) AS total_quantity_sold,
+    SUM(od.subtotal) AS total_revenue
+FROM orders o
+JOIN order_details od ON o.order_id = od.order_id
+GROUP BY DATE_TRUNC('month', o.order_date);
