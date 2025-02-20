@@ -68,3 +68,11 @@ CREATE TRIGGER calculate_subtotal_trigger
 BEFORE INSERT OR UPDATE ON order_details
 FOR EACH ROW
 EXECUTE FUNCTION calculate_subtotal();
+
+-- Insert Order
+BEGIN;
+INSERT INTO orders (customer_id) VALUES (1);
+INSERT INTO order_details (order_id, product_id, quantity) VALUES
+(currval('orders_order_id_seq'), 1, 2),
+(currval('orders_order_id_seq'), 2, 1);
+COMMIT;
