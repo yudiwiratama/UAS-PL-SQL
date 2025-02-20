@@ -3,7 +3,8 @@ CREATE DATABASE ecommerce;
 
 -- Connect ke database ecommerce
 \c ecommerce
-
+    
+    
 -- Buat tabel
 CREATE TABLE customers (
     customer_id SERIAL PRIMARY KEY,
@@ -36,6 +37,7 @@ CREATE TABLE order_details (
     quantity INT NOT NULL,
     subtotal NUMERIC(10,2)
 );
+
 
 -- Insert data contoh
 INSERT INTO customers (name, email, phone) VALUES
