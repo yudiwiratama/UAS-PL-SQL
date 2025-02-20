@@ -41,7 +41,7 @@ CREATE TABLE order_details (
 
 -- Insert data contoh
 INSERT INTO customers (name, email, phone) VALUES
-('Angga Wijaya', 'angga.wijaya@gmail.com', '08123456789'),
+('Angga Wijaya', 'anggawijaya@gmail.com', '08123456789'),
 ('Juan Sunarti', 'juan227@gmail.com', '08234567890');
 
 INSERT INTO products (product_name, price, stock, description) VALUES
