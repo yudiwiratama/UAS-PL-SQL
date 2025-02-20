@@ -1,16 +1,16 @@
--- Function 1: Menghitung total harga pesanan
-CREATE OR REPLACE FUNCTION calculate_total_price(order_id INT)
+-- Function 1: Menghitung total harga pesanan (sudah diperbaiki)
+CREATE OR REPLACE FUNCTION calculate_total_price(p_order_id INT)
 RETURNS NUMERIC AS $$
 DECLARE
     total NUMERIC(10,2);
 BEGIN
     SELECT SUM(subtotal) INTO total
     FROM order_details
-    WHERE order_id = calculate_total_price.order_id;
+    WHERE order_id = p_order_id;
     
     UPDATE orders
     SET total_price = total
-    WHERE order_id = calculate_total_price.order_id;
+    WHERE order_id = p_order_id;
     
     RETURN total;
 END;
@@ -68,33 +68,3 @@ CREATE TRIGGER calculate_subtotal_trigger
 BEFORE INSERT OR UPDATE ON order_details
 FOR EACH ROW
 EXECUTE FUNCTION calculate_subtotal();
-
--- Trigger untuk membuat view laporan penjualan per produk
-CREATE VIEW sales_report_by_product AS
-SELECT
-    p.product_name,
-    SUM(od.quantity) AS total_quantity_sold,
-    SUM(od.subtotal) AS total_revenue
-FROM order_details od
-JOIN products p ON od.product_id = p.product_id
-GROUP BY p.product_name;
-
--- View untuk laporan penjualan per pelanggan
-CREATE VIEW sales_report_by_customer AS
-SELECT
-    c.name AS customer_name,
-    COUNT(o.order_id) AS total_orders,
-    SUM(o.total_price) AS total_spent
-FROM orders o
-JOIN customers c ON o.customer_id = c.customer_id
-GROUP BY c.name;
-
--- View untuk laporan penjualan per bulan
-CREATE VIEW sales_report_by_month AS
-SELECT
-    DATE_TRUNC('month', o.order_date) AS month,
-    SUM(od.quantity) AS total_quantity_sold,
-    SUM(od.subtotal) AS total_revenue
-FROM orders o
-JOIN order_details od ON o.order_id = od.order_id
-GROUP BY DATE_TRUNC('month', o.order_date);
